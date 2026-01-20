@@ -1,0 +1,79 @@
+package com.oas.userservice.service.impl;
+
+import com.oas.transactionservice.model.User;
+import com.oas.transactionservice.repository.UserRepository;
+import com.oas.transactionservice.service.UserService;
+
+import org.springframework.stereotype.Service;
+
+import java.time.Instant;
+import java.util.List;
+
+@Service
+public class UserServiceImpl implements UserService {
+
+    private final UserRepository userRepository;
+
+    public UserServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    @Override
+    public User createUser(User user) {
+
+        // ✅ Prevent duplicate email
+        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+            throw new RuntimeException("User already exists with email: " + user.getEmail());
+        }
+
+        user.setActive(true);
+        user.setCreatedAt(Instant.now());
+        return userRepository.save(user);
+    }
+
+    @Override
+    public User getUserById(String userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+    }
+
+    @Override
+    public User getUserByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+    }
+
+    @Override
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
+
+    @Override
+    public User updateUser(String userId, User updatedUser) {
+
+        User existingUser = getUserById(userId);
+
+        // ✅ Prevent duplicate email on update
+        userRepository.findByEmail(updatedUser.getEmail())
+                .ifPresent(user -> {
+                    if (!user.getId().equals(userId)) {
+                        throw new RuntimeException(
+                            "Email already in use: " + updatedUser.getEmail()
+                        );
+                    }
+                });
+
+        existingUser.setName(updatedUser.getName());
+        existingUser.setEmail(updatedUser.getEmail());
+        existingUser.setRole(updatedUser.getRole());
+
+        return userRepository.save(existingUser);
+    }
+
+    @Override
+    public void deactivateUser(String userId) {
+        User user = getUserById(userId);
+        user.setActive(false);
+        userRepository.save(user);
+    }
+}

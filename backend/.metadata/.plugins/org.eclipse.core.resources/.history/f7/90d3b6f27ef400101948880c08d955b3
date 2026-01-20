@@ -1,0 +1,4 @@
+spring.application.name=transaction-service
+spring.data.mongodb.uri=mongodb://localhost:27017/oas_transactiondb
+spring.data.mongodb.auto-index-creation=true
+server.port=8084

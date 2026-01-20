@@ -1,0 +1,5 @@
+package com.oas.auctionservice.service.impl;
+
+public class AuctionServiceImpl {
+
+}

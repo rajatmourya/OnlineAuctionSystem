@@ -1,0 +1,55 @@
+package com.oas.userservice.controller;
+
+import com.oas.userservice.model.LoginRequest;
+import com.oas.userservice.model.User;
+import com.oas.userservice.security.JwtUtil;
+import com.oas.userservice.service.UserService;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
+
+@RestController
+@RequestMapping("/api/auth")
+public class AuthController {
+
+    private final UserService userService;
+    private final JwtUtil jwtUtil;
+
+    public AuthController(UserService userService, JwtUtil jwtUtil) {
+        this.userService = userService;
+        this.jwtUtil = jwtUtil;
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<User> register(@RequestBody User user) {
+        User savedUser = userService.createUser(user);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
+
+        return userService.authenticate(
+                        request.getEmail(),
+                        request.getPassword())
+                .map(user -> {
+
+                    String token = jwtUtil.generateToken(
+                            user.getEmail(),
+                            user.getRole());
+
+                    Map<String, Object> response = new HashMap<>();
+                    response.put("token", token);
+                    response.put("role", user.getRole());
+
+                    return ResponseEntity.ok(response);
+                })
+                .orElse(ResponseEntity
+                        .status(HttpStatus.UNAUTHORIZED)
+                        .body("Invalid credentials"));
+    }
+}

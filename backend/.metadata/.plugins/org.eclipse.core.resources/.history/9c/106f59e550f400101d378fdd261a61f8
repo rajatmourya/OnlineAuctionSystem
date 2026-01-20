@@ -1,0 +1,33 @@
+package com.oas.biddingservice.controller;
+
+@SpringBootTest
+@AutoConfigureMockMvc
+class BiddingControllerTest {
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @Test
+    void placeBidTest() throws Exception {
+
+        String bidJson = """
+            {
+              "auctionId":"AUCTION1",
+              "bidderId":"BUYER1",
+              "bidAmount":45000
+            }
+            """;
+
+        mockMvc.perform(post("/api/bids")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(bidJson))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void getHighestBidTest() throws Exception {
+        mockMvc.perform(get("/api/bids/auction/AUCTION1/highest"))
+                .andExpect(status().isOk());
+    }
+}
+

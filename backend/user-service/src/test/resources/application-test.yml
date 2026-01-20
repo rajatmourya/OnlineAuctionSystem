@@ -1,0 +1,11 @@
+spring:
+  cloud:
+    discovery:
+      enabled: false
+  data:
+    mongodb:
+      database: user_service_test
+
+eureka:
+  client:
+    enabled: false

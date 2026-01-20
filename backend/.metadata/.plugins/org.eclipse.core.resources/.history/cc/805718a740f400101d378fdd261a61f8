@@ -1,0 +1,5 @@
+package com.oas.userservice.repository;
+
+public interface UserRepository {
+
+}

@@ -1,0 +1,11 @@
+1768732782981	Rename package 'com.oas.userservice'
+1768732791855	Rename package 'com.oas.userservice.controller'
+1768732803178	Rename package 'com.oas.userservice.model'
+1768732812322	Rename package 'com.oas.userservice.repository'
+1768732820084	Rename package 'com.oas.userservice.service'
+1768732828119	Rename package 'com.oas.userservice.service.impl'
+1768732843430	Delete elements
+1768732859994	Rename type 'UserServiceApplication'
+1768733300509	Rename package 'com.oas.userservice.controller'
+1768733327008	Rename package 'com.oas.transectionservice.controller'
+1768733339514	Rename type 'UserControllerTest'

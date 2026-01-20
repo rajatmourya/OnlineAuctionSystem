@@ -1,0 +1,5 @@
+package com.oas.transactionservice.model;
+
+public class Transaction {
+
+}

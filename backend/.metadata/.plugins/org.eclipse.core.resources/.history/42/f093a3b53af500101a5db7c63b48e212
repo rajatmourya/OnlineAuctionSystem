@@ -1,0 +1,5 @@
+package com.oas.apigateway.config;
+
+public class CorsConfig {
+
+}

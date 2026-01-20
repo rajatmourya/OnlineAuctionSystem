@@ -1,0 +1,4 @@
+spring.application.name=bidding-service
+spring.data.mongodb.uri=mongodb://localhost:27017/oas_biddingdb
+spring.data.mongodb.auto-index-creation=true
+server.port=8083

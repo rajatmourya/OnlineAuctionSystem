@@ -1,0 +1,5 @@
+package com.oas.biddingservice.service.impl;
+
+public class BiddingServiceImpl {
+
+}

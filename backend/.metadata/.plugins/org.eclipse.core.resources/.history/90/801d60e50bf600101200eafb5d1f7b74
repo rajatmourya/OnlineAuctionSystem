@@ -1,0 +1,5 @@
+package com.oas.userservice.security;
+
+public class SecurityBeansConfig {
+
+}

@@ -1,0 +1,40 @@
+package com.oas.userservice.controller;
+
+import com.oas.userservice.security.JwtUtil;
+import com.oas.userservice.model.LoginRequest;
+import com.oas.userservice.model.User;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.*;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
+
+@RestController
+@RequestMapping("/api/users")
+public class AuthController {
+
+    @Autowired
+    private JwtUtil jwtUtil;
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
+
+        // TEMP LOGIC (replace with DB validation)
+        if ("test@gmail.com".equals(request.getEmail())
+                && "1234".equals(request.getPassword())) {
+
+            String token = jwtUtil.generateToken(request.getEmail());
+            return ResponseEntity.ok(Map.of("token", token));
+        }
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body("Invalid credentials");
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<?> register(@RequestBody User user) {
+
+        // Save user to DB (later)
+        return ResponseEntity.ok("User registered successfully");
+    }
+}

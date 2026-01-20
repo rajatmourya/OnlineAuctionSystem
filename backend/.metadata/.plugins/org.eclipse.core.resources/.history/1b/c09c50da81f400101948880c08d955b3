@@ -1,0 +1,8 @@
+
+spring.data.mongodb.auto-index-creation=true
+
+spring.application.name=bidding-service
+server.port=8083
+
+spring.data.mongodb.uri=mongodb://localhost:27017/oas_biddingdb
+eureka.client.service-url.defaultZone=http://localhost:8761/eureka/

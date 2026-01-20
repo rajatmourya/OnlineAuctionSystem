@@ -1,0 +1,5 @@
+package com.oas.biddingservice.controller;
+
+public class BiddingController {
+
+}

@@ -1,0 +1,6 @@
+spring.application.name=online_auction_system_user_service
+server.port=8081
+spring.data.mongodb.uri=mongodb://localhost:27017/oas_usersdb
+
+
+

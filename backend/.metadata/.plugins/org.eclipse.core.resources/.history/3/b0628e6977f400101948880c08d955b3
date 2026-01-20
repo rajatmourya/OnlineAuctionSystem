@@ -1,0 +1,100 @@
+package com.oas.biddingservice.controller;
+
+import com.oas.biddingservice.model.Bid;
+import com.oas.biddingservice.service.BiddingService;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/bids")
+@Validated
+public class BiddingController {
+
+    private final BiddingService biddingService;
+
+    public BiddingController(BiddingService biddingService) {
+        this.biddingService = biddingService;
+    }
+
+    /**
+     * Place a new bid
+     */
+    @PostMapping
+    public ResponseEntity<Bid> placeBid(@Valid @RequestBody Bid bid) {
+        Bid savedBid = biddingService.placeBid(bid);
+        return new ResponseEntity<>(savedBid, HttpStatus.CREATED);
+    }
+
+    /**
+     * Get all bids for a specific auction
+     */
+    @GetMapping("/auction/{auctionId}")
+    public ResponseEntity<List<Bid>> getBidsForAuction(@PathVariable String auctionId) {
+        List<Bid> bids = biddingService.getAllBidsForAuction(auctionId);
+        return ResponseEntity.ok(bids);
+    }
+
+    /**
+     * Get highest bid for an auction
+     */
+    @GetMapping("/auction/{auctionId}/highest")
+    public ResponseEntity<Bid> getHighestBid(@PathVariable String auctionId) {
+        Bid highestBid = biddingService.getHighestBid(auctionId);
+        return ResponseEntity.ok(highestBid);
+    }
+}
+package com.oas.biddingservice.controller;
+
+import com.oas.biddingservice.model.Bid;
+import com.oas.biddingservice.service.BiddingService;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/bids")
+@Validated
+public class BiddingController {
+
+    private final BiddingService biddingService;
+
+    public BiddingController(BiddingService biddingService) {
+        this.biddingService = biddingService;
+    }
+
+    /**
+     * Place a new bid
+     */
+    @PostMapping
+    public ResponseEntity<Bid> placeBid(@Valid @RequestBody Bid bid) {
+        Bid savedBid = biddingService.placeBid(bid);
+        return new ResponseEntity<>(savedBid, HttpStatus.CREATED);
+    }
+
+    /**
+     * Get all bids for a specific auction
+     */
+    @GetMapping("/auction/{auctionId}")
+    public ResponseEntity<List<Bid>> getBidsForAuction(@PathVariable String auctionId) {
+        List<Bid> bids = biddingService.getAllBidsForAuction(auctionId);
+        return ResponseEntity.ok(bids);
+    }
+
+    /**
+     * Get highest bid for an auction
+     */
+    @GetMapping("/auction/{auctionId}/highest")
+    public ResponseEntity<Bid> getHighestBid(@PathVariable String auctionId) {
+        Bid highestBid = biddingService.getHighestBid(auctionId);
+        return ResponseEntity.ok(highestBid);
+    }
+}

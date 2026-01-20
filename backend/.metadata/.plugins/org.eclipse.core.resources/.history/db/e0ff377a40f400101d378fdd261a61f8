@@ -1,0 +1,5 @@
+package com.oas.userservice.model;
+
+public class User {
+
+}

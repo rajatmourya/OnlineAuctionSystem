@@ -1,0 +1,5 @@
+package com.oas.biddingservice.repository;
+
+public interface BidRepository {
+
+}

@@ -1,0 +1,13 @@
+package com.oas.project;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class OASApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(OASApplication.class, args);
+	}
+
+}

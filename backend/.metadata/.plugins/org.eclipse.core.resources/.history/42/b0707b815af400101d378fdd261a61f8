@@ -1,0 +1,5 @@
+package com.oas.transactionservice.service;
+
+public interface TransactionService {
+
+}

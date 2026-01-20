@@ -1,0 +1,21 @@
+package  com.oas.userservice.service;
+
+import  com.oas.userservice.model.User;
+
+import java.util.List;
+
+public interface UserService {
+
+    User createUser(User user);                 // BUYER registration
+    User createUserWithRole(User user);         // ADMIN creates SELLER/ADMIN
+
+    User getUserById(String userId);
+
+    User getUserByEmail(String email);
+
+    List<User> getAllUsers();
+
+    User updateUser(String userId, User user);
+
+    void deactivateUser(String userId);
+}

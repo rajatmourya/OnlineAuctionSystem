@@ -1,0 +1,50 @@
+package com.oas.userservice.controller;
+
+import com.oas.userservice.model.User;
+import com.oas.userservice.service.UserService;
+
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/users")
+public class UserController {
+
+    private final UserService userService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
+
+    // ✅ ADMIN creates SELLER / ADMIN
+    @PostMapping("/admin/create")
+    public User createUserByAdmin(@RequestBody User user) {
+        return userService.createUserWithRole(user);
+    }
+
+    // ✅ ADMIN / SUPPORT
+    @GetMapping
+    public List<User> getAllUsers() {
+        return userService.getAllUsers();
+    }
+
+    // ✅ ADMIN / USER
+    @GetMapping("/{id}")
+    public User getUserById(@PathVariable String id) {
+        return userService.getUserById(id);
+    }
+
+    // ✅ ADMIN
+    @PutMapping("/{id}")
+    public User updateUser(@PathVariable String id,
+                           @RequestBody User user) {
+        return userService.updateUser(id, user);
+    }
+
+    // ✅ ADMIN
+    @DeleteMapping("/{id}")
+    public void deactivateUser(@PathVariable String id) {
+        userService.deactivateUser(id);
+    }
+}

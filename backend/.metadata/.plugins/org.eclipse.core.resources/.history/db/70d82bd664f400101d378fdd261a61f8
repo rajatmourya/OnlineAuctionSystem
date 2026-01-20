@@ -1,0 +1,13 @@
+package com.oas.registryservice;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+
+@SpringBootTest
+class ServiceRegistryApplicationTest {
+
+    @Test
+    void contextLoads() {
+        // Verifies Eureka Server starts successfully
+    }
+}

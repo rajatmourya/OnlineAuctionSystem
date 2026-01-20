@@ -1,0 +1,20 @@
+package  com.oas.transactionservice.service;
+
+import java.util.List;
+
+import com.oas.transactionservice.model.User;
+
+public interface UserService {
+
+    User createUser(User user);
+
+    User getUserById(String userId);
+
+    User getUserByEmail(String email);
+
+    List<User> getAllUsers();
+
+    User updateUser(String userId, User user);
+
+    void deactivateUser(String userId);
+}

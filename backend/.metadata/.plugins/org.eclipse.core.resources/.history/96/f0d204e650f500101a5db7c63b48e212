@@ -1,0 +1,43 @@
+package com.oas.userservice.controller;
+
+import com.oas.userservice.model.LoginRequest;
+import com.oas.userservice.model.User;
+import com.oas.userservice.security.JwtUtil;
+import com.oas.userservice.service.UserService;
+import org.springframework.http.*;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
+
+@RestController
+@RequestMapping("/api/users")
+public class AuthController {
+
+    private final UserService userService;
+    private final JwtUtil jwtUtil;
+
+    public AuthController(UserService userService, JwtUtil jwtUtil) {
+        this.userService = userService;
+        this.jwtUtil = jwtUtil;
+    }
+
+    // PUBLIC REGISTER (BUYER)
+    @PostMapping("/register")
+    public User register(@RequestBody User user) {
+        return userService.createUser(user);
+    }
+
+    // LOGIN
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
+
+        return userService.authenticate(request.getEmail(), request.getPassword())
+                .map(user -> ResponseEntity.ok(
+                        Map.of("token",
+                                jwtUtil.generateToken(user.getEmail(), user.getRole()),
+                                "role", user.getRole())
+                ))
+                .orElse(ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body("Invalid credentials"));
+    }
+}

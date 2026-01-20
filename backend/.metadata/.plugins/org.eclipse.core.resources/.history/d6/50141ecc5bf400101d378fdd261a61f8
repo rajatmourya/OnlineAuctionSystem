@@ -1,0 +1,61 @@
+package com.oas.transactionservice.controller;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+@SpringBootTest
+@AutoConfigureMockMvc
+public class TransactionControllerTest {
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @Test
+    void createTransactionTest() throws Exception {
+
+        String transactionJson = """
+                {
+                  "itemId": "ITEM1",
+                  "auctionId": "AUC1",
+                  "sellerId": "SELLER1",
+                  "buyerId": "BUYER1",
+                  "sellingPrice": 58000
+                }
+                """;
+
+        mockMvc.perform(post("/api/transactions")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(transactionJson))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void getTransactionByIdTest() throws Exception {
+
+        // This will return 200 even if not found, depending on controller logic
+        mockMvc.perform(get("/api/transactions/TEST_TXN_ID"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void getTransactionsByBuyerTest() throws Exception {
+
+        mockMvc.perform(get("/api/transactions/buyer/BUYER1"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void getTransactionsBySellerTest() throws Exception {
+
+        mockMvc.perform(get("/api/transactions/seller/SELLER1"))
+                .andExpect(status().isOk());
+    }
+}

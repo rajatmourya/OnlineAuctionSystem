@@ -1,0 +1,97 @@
+@Service
+public class UserServiceImpl implements UserService {
+
+    private final UserRepository userRepository;
+    private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+
+    public UserServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    // PUBLIC REGISTRATION → BUYER
+    @Override
+    public User createUser(User user) {
+
+        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+            throw new RuntimeException("User already exists with email: " + user.getEmail());
+        }
+
+        user.setPassword(encoder.encode(user.getPassword()));
+        user.setRole("BUYER");
+        user.setActive(true);
+        user.setCreatedAt(Instant.now());
+
+        return userRepository.save(user);
+    }
+
+    // ADMIN CREATES SELLER / ADMIN
+    @Override
+    public User createUserWithRole(User user) {
+
+        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+            throw new RuntimeException("User already exists");
+        }
+
+        user.setPassword(encoder.encode(user.getPassword()));
+        user.setActive(true);
+        user.setCreatedAt(Instant.now());
+
+        if (user.getRole() == null) {
+            user.setRole("BUYER");
+        }
+
+        return userRepository.save(user);
+    }
+
+    // LOGIN AUTHENTICATION
+    @Override
+    public Optional<User> authenticate(String email, String rawPassword) {
+
+        return userRepository.findByEmail(email)
+                .filter(User::isActive)
+                .filter(user -> encoder.matches(rawPassword, user.getPassword()));
+    }
+
+    @Override
+    public User getUserById(String userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+    }
+
+    @Override
+    public User getUserByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+    }
+
+    @Override
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
+
+    @Override
+    public User updateUser(String userId, User updatedUser) {
+
+        User existingUser = getUserById(userId);
+
+        userRepository.findByEmail(updatedUser.getEmail())
+                .ifPresent(user -> {
+                    if (!user.getId().equals(userId)) {
+                        throw new RuntimeException("Email already in use");
+                    }
+                });
+
+        existingUser.setName(updatedUser.getName());
+        existingUser.setEmail(updatedUser.getEmail());
+        existingUser.setRole(updatedUser.getRole());
+
+        return userRepository.save(existingUser);
+    }
+
+    @Override
+    public void deactivateUser(String userId) {
+        User user = getUserById(userId);
+        user.setActive(false);
+        userRepository.save(user);
+    }
+}

@@ -1,0 +1,10 @@
+1768725398020	Rename package 'com.oas.userservice'
+1768725429815	Rename package 'com.oas.userservice.controller'
+1768725437196	Rename package 'com.oas.userservice.model'
+1768725445554	Rename package 'com.oas.userservice.repository'
+1768725452721	Rename package 'com.oas.userservice.service'
+1768725460963	Rename package 'com.oas.userservice.service.impl'
+1768725492536	Delete elements
+1768725587097	Delete element
+1768725708196	Rename compilation unit 'UserController.java'
+1768736884598	Copy file

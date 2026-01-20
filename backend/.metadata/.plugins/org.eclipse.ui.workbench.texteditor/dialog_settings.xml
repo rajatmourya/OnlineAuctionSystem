@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<item key="hasShownOverlayPopupBefore" value="true"/>
+	<section name="java.lang.Class">
+		<item key="replaceBarOpen" value="true"/>
+		<list key="findhistory">
+			<item value="user_service"/>
+			<item value="transaction_service"/>
+			<item value="registry_service"/>
+			<item value="bidding_service"/>
+			<item value="auction_service"/>
+			<item value="_"/>
+			<item value="api_gateway"/>
+			<item value="user-service"/>
+			<item value="auction-service"/>
+			<item value="transaction-service"/>
+			<item value="service_registry"/>
+			<item value="service-registry"/>
+			<item value="auction"/>
+			<item value="com.auction"/>
+		</list>
+		<list key="replacehistory">
+			<item value="user-service"/>
+			<item value="transaction-service"/>
+			<item value="registry-service"/>
+			<item value="bidding-service"/>
+			<item value="auction-service"/>
+			<item value="-"/>
+			<item value="api-gateway"/>
+			<item value="user_service"/>
+			<item value="transaction_service"/>
+			<item value="registry_service"/>
+			<item value="bidding_service"/>
+			<item value="auction_service"/>
+			<item value="oas"/>
+			<item value=" com.oas"/>
+		</list>
+	</section>
+</section>
