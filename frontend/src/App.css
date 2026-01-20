@@ -1,0 +1,33 @@
+/* GLOBAL RESET */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+/* BACKGROUND */
+.app-background {
+  min-height: 100vh;
+  position: relative;
+  background: url("./assets/bg.jpg") center / cover no-repeat;
+}
+
+.app-background::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* LAYER FIX */
+.navbar,
+.page-content,
+.center-page,
+.hero,
+form {
+  position: relative;
+  z-index: 2;
+}
