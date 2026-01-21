@@ -139,6 +139,18 @@ public class UserServiceImpl implements UserService {
             existingUser.setName(updatedUser.getName());
         }
 
+        if (updatedUser.getMobileNumber() != null) {
+            existingUser.setMobileNumber(updatedUser.getMobileNumber());
+        }
+
+        if (updatedUser.getAddress() != null) {
+            existingUser.setAddress(updatedUser.getAddress());
+        }
+
+        if (updatedUser.getProfilePhotoUrl() != null) {
+            existingUser.setProfilePhotoUrl(updatedUser.getProfilePhotoUrl());
+        }
+
         // ⚠️ Role change should normally be ADMIN-only
         if (updatedUser.getRole() != null && !updatedUser.getRole().isBlank()) {
             existingUser.setRole(updatedUser.getRole());
