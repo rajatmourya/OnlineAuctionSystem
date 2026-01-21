@@ -1,0 +1,118 @@
+package com.oas.auctionservice.controller;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.oas.auctionservice.model.Auction;
+import com.oas.auctionservice.repository.AuctionRepository;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.MockMvc;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+@SpringBootTest
+@AutoConfigureMockMvc
+class AuctionControllerTest {
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @Autowired
+    private AuctionRepository auctionRepository;
+
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    @BeforeEach
+    void setup() {
+        auctionRepository.deleteAll();
+    }
+
+    // ---------------- GET ALL AUCTIONS ----------------
+    @Test
+    @WithMockUser(username = "buyer@test.com", roles = {"BUYER"})
+    void getAllAuctionsTest() throws Exception {
+
+        Auction auction = new Auction();
+        auction.setTitle("Test Auction");
+        auction.setDescription("Sample description");
+        auction.setStartingPrice(1000);
+        auctionRepository.save(auction);
+
+        mockMvc.perform(get("/api/auctions"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray());
+    }
+
+    // ---------------- CREATE AUCTION ----------------
+    @Test
+    @WithMockUser(username = "seller@test.com", roles = {"SELLER"})
+    void createAuctionTest() throws Exception {
+
+        Auction auction = new Auction();
+        auction.setTitle("New Auction");
+        auction.setDescription("New auction description");
+        auction.setStartingPrice(2000);
+
+        mockMvc.perform(post("/api/auctions")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(auction)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.title").value("New Auction"));
+    }
+
+    // ---------------- GET AUCTION BY ID ----------------
+    @Test
+    @WithMockUser(username = "buyer@test.com", roles = {"BUYER"})
+    void getAuctionByIdTest() throws Exception {
+
+        Auction auction = new Auction();
+        auction.setTitle("Single Auction");
+        auction.setStartingPrice(1500);
+        Auction saved = auctionRepository.save(auction);
+
+        mockMvc.perform(get("/api/auctions/" + saved.getId()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.title").value("Single Auction"));
+    }
+
+    // ---------------- UPDATE AUCTION ----------------
+    @Test
+    @WithMockUser(username = "seller@test.com", roles = {"SELLER"})
+    void updateAuctionTest() throws Exception {
+
+        Auction auction = new Auction();
+        auction.setTitle("Old Title");
+        auction.setStartingPrice(1000);
+        Auction saved = auctionRepository.save(auction);
+
+        saved.setTitle("Updated Title");
+
+        mockMvc.perform(put("/api/auctions/" + saved.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(saved)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.title").value("Updated Title"));
+    }
+
+    // ---------------- CLOSE AUCTION ----------------
+    @Test
+    @WithMockUser(username = "seller@test.com", roles = {"SELLER"})
+    void closeAuctionTest() throws Exception {
+
+        Auction auction = new Auction();
+        auction.setTitle("Close Auction");
+        auction.setStartingPrice(500);
+        Auction saved = auctionRepository.save(auction);
+
+        mockMvc.perform(post("/api/auctions/" + saved.getId() + "/close"))
+                .andExpect(status().isOk());
+    }
+}

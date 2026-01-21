@@ -1,0 +1,54 @@
+package com.oas.auctionservice.security;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig {
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(
+            HttpSecurity http,
+            JwtAuthenticationFilter jwtFilter) throws Exception {
+
+        http
+            // 1. Disable CSRF for REST APIs (since we use JWTs)
+            .csrf(csrf -> csrf.disable())
+
+            // 2. Set session management to stateless
+            .sessionManagement(session ->
+                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+
+            // 3. Define granular authorization rules
+            .authorizeHttpRequests(auth -> auth
+                // Allow health checks and internal monitoring
+                .requestMatchers("/actuator/**").permitAll()
+
+                // Public/Common: Allow viewing auctions for any authenticated user
+                .requestMatchers(HttpMethod.GET, "/api/auctions/**").authenticated()
+
+                // Seller Only: Restrict creating, updating, and closing auctions to SELLERs
+                .requestMatchers(HttpMethod.POST, "/api/auctions").hasRole("SELLER")
+                .requestMatchers(HttpMethod.PUT, "/api/auctions/**").hasRole("SELLER")
+                .requestMatchers(HttpMethod.POST, "/api/auctions/*/close").hasRole("SELLER")
+
+                // All other requests must be authenticated
+                .anyRequest().authenticated()
+            )
+
+            // 4. Add the JWT Filter before the standard UsernamePasswordAuthenticationFilter
+            .addFilterBefore(
+                jwtFilter,
+                UsernamePasswordAuthenticationFilter.class
+            );
+
+        return http.build();
+    }
+}

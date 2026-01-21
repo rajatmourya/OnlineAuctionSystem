@@ -1,0 +1,48 @@
+package com.oas.auctionservice.controller;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.oas.auctionservice.model.Auction;
+import com.oas.auctionservice.repository.AuctionRepository;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.MockMvc;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+@Test
+@WithMockUser(username = "seller@test.com", roles = {"SELLER"})
+void updateAuctionTest() throws Exception {
+
+    // 🔹 Step 1: Create an OPEN auction
+    Auction auction = new Auction();
+    auction.setTitle("Old Title");
+    auction.setDescription("Old description");
+    auction.setStartingPrice(1000);
+    auction.setClosed(false);   // 🔥 IMPORTANT
+
+    Auction savedAuction = auctionRepository.save(auction);
+
+    // 🔹 Step 2: Prepare updated auction data (still OPEN)
+    Auction updatedAuction = new Auction();
+    updatedAuction.setTitle("Updated Title");
+    updatedAuction.setDescription("Updated description");
+    updatedAuction.setStartingPrice(1500);
+    updatedAuction.setClosed(false);  // 🔥 MUST remain false
+
+    // 🔹 Step 3: Call UPDATE API
+    mockMvc.perform(
+            put("/api/auctions/" + savedAuction.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(updatedAuction))
+    )
+    .andExpect(status().isOk())
+    .andExpect(jsonPath("$.title").value("Updated Title"))
+    .andExpect(jsonPath("$.startingPrice").value(1500));
+}

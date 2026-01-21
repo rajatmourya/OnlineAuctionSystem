@@ -8,38 +8,41 @@ spring:
   cloud:
     gateway:
       routes:
-        - id: user-service
+        # -------- USER AUTH APIs --------
+        - id: user-service-auth
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/api/user/auth/**
+
+        # -------- USER CRUD APIs --------
+        - id: user-service-users
           uri: lb://USER-SERVICE
           predicates:
             - Path=/api/users/**
 
+        # -------- AUCTION SERVICE --------
         - id: auction-service
           uri: lb://AUCTION-SERVICE
           predicates:
             - Path=/api/auctions/**
 
+        # -------- BIDDING SERVICE --------
         - id: bidding-service
           uri: lb://BIDDING-SERVICE
           predicates:
             - Path=/api/bids/**
 
+        # -------- TRANSACTION SERVICE --------
         - id: transaction-service
           uri: lb://TRANSACTION-SERVICE
           predicates:
             - Path=/api/transactions/**
 
-      # OPTIONAL (Recommended for debugging)
       discovery:
         locator:
-          enabled: false   # keep false since you are using explicit routes
+          enabled: false
 
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:8761/eureka/
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: health,info
+      defaultZone: http://localhost:8761/eureka

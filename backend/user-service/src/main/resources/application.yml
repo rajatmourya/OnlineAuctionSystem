@@ -1,0 +1,9 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: user-service
+
+jwt:
+  secret: oas-secret-key-1234567890-oas-secret-key-1234567890

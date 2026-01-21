@@ -1,0 +1,52 @@
+package com.oas.userservice.security;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+@Configuration
+public class SecurityConfig {
+
+    @Bean
+    public SecurityFilterChain filterChain(
+            HttpSecurity http,
+            JwtAuthenticationFilter jwtFilter) throws Exception {
+
+        http
+            // Disable CSRF for REST APIs
+            .csrf(csrf -> csrf.disable())
+
+            // Stateless session (JWT based)
+            .sessionManagement(sm ->
+                sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+
+            // Authorization rules
+            .authorizeHttpRequests(auth -> auth
+
+                // Public APIs (no token required)
+                .requestMatchers(
+                        "/api/user/auth/**",
+                        "/actuator/**"
+                ).permitAll()
+
+                // Secured user APIs (ANY valid JWT is enough)
+                .requestMatchers("/api/users/**")
+                .authenticated()
+
+                // Everything else also requires authentication
+                .anyRequest()
+                .authenticated()
+            )
+
+            // JWT filter before Spring Security auth filter
+            .addFilterBefore(
+                    jwtFilter,
+                    UsernamePasswordAuthenticationFilter.class
+            );
+
+        return http.build();
+    }
+}

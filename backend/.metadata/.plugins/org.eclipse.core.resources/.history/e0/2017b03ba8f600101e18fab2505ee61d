@@ -1,0 +1,51 @@
+package com.oas.auctionservice.security;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig {
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(
+            HttpSecurity http,
+            JwtAuthenticationFilter jwtFilter) throws Exception {
+
+        http
+            // Disable CSRF (REST API)
+            .csrf(csrf -> csrf.disable())
+
+            // JWT = Stateless
+            .sessionManagement(session ->
+                session.sessionCreationPolicy(
+                        SessionCreationPolicy.STATELESS))
+
+            // Authorization rules
+            .authorizeHttpRequests(auth -> auth
+
+                // Public (optional)
+                .requestMatchers("/actuator/**").permitAll()
+
+                // Auction APIs require JWT
+                .requestMatchers("/api/auctions/**")
+                .authenticated()
+
+                // Everything else secured
+                .anyRequest().authenticated()
+            )
+
+            // JWT Filter
+            .addFilterBefore(
+                jwtFilter,
+                UsernamePasswordAuthenticationFilter.class
+            );
+
+        return http.build();
+    }
+}

@@ -22,6 +22,7 @@ public class User {
     private String role;
     private boolean active;
     private Instant createdAt;
+    
 	public String getId() {
 		return id;
 	}

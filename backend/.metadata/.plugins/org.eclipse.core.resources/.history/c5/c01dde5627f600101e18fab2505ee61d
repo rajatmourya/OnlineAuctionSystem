@@ -1,0 +1,75 @@
+package com.oas.userservice.controller;
+
+import com.oas.userservice.model.LoginRequest;
+import com.oas.userservice.model.User;
+import com.oas.userservice.security.JwtUtil;
+import com.oas.userservice.service.UserService;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
+
+@RestController
+@RequestMapping("/api/auth")
+public class AuthController {
+
+    private final UserService userService;
+    private final JwtUtil jwtUtil;
+
+    public AuthController(UserService userService, JwtUtil jwtUtil) {
+        this.userService = userService;
+        this.jwtUtil = jwtUtil;
+    }
+
+    // ---------------- REGISTER ----------------
+    @PostMapping("/register")
+    public ResponseEntity<Map<String, Object>> register(
+            @RequestBody User user) {
+
+        User savedUser = userService.createUser(user);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("id", savedUser.getId());
+        response.put("email", savedUser.getEmail());
+        response.put("role", savedUser.getRole());
+        response.put("message", "User registered successfully");
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(response);
+    }
+
+    // ---------------- LOGIN ----------------
+    @PostMapping("/login")
+    public ResponseEntity<Map<String, Object>> login(
+            @RequestBody LoginRequest request) {
+
+        return userService.authenticate(
+                        request.getEmail(),
+                        request.getPassword())
+                .map(user -> {
+
+                    String token = jwtUtil.generateToken(
+                            user.getEmail(),
+                            user.getRole());
+
+                    Map<String, Object> response = new HashMap<>();
+                    response.put("token", token);
+                    response.put("role", user.getRole());
+                    response.put("email", user.getEmail());
+
+                    return ResponseEntity.ok(response);
+                })
+                .orElseGet(() -> {
+                    Map<String, Object> error = new HashMap<>();
+                    error.put("error", "Invalid credentials");
+
+                    return ResponseEntity
+                            .status(HttpStatus.UNAUTHORIZED)
+                            .body(error);
+                });
+    }
+}

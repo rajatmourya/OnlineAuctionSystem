@@ -1,0 +1,48 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-gateway
+
+  cloud:
+    gateway:
+      routes:
+        # -------- USER AUTH APIs --------
+        - id: user-service-auth
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/api/user/**
+
+        # -------- USER CRUD APIs --------
+        - id: user-service-users
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/api/users/**
+
+        # -------- AUCTION SERVICE --------
+        - id: auction-service
+          uri: lb://AUCTION-SERVICE
+          predicates:
+            - Path=/api/auctions/**
+
+        # -------- BIDDING SERVICE --------
+        - id: bidding-service
+          uri: lb://BIDDING-SERVICE
+          predicates:
+            - Path=/api/bids/**
+
+        # -------- TRANSACTION SERVICE --------
+        - id: transaction-service
+          uri: lb://TRANSACTION-SERVICE
+          predicates:
+            - Path=/api/transactions/**
+
+      discovery:
+        locator:
+          enabled: false
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
