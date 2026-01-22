@@ -31,3 +31,21 @@ form {
   position: relative;
   z-index: 2;
 }
+
+/* ===== Global text helpers (dark background) ===== */
+.page-heading {
+  color: #fff;
+}
+
+.no-data {
+  color: #fff;
+}
+
+.table-container > p {
+  color: #fff;
+}
+
+.error-message {
+  color: #ff6b6b;
+  font-weight: 600;
+}

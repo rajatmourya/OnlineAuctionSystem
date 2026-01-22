@@ -143,10 +143,17 @@ function Orders() {
           ((a.endTime || a.endDate) && new Date(a.endTime || a.endDate) < new Date())
       );
 
-      // Get all transactions to find which bids won
-      const userTransactions = await transactionService.getTransactionsByBuyer(
-        getUserIdentifier() || loggedUser.email
-      );
+      // Transactions are used only for invoice actions (may not exist immediately)
+      let userTransactions = [];
+      try {
+        userTransactions = await transactionService.getTransactionsByBuyer(
+          getUserIdentifier() || loggedUser.email
+        );
+      } catch (err) {
+        userTransactions = [];
+      }
+
+      const highestBidCache = new Map();
 
       // Enrich bids with auction and winner information
       const enrichedBids = await Promise.all(
@@ -157,22 +164,24 @@ function Orders() {
           const isClosed = closedAuctions.some((a) => a.id === auction.id);
           if (!isClosed) return null; // Only show completed auctions
 
-          // Check if this bid won
           const transaction = userTransactions.find((t) => t.auctionId === auction.id);
           const userIdOrEmail = getUserIdentifier() || loggedUser.email;
-          const isWinner =
-            transaction &&
-            (transaction.buyerId === userIdOrEmail ||
-              String(transaction.buyerId) === String(userIdOrEmail));
 
-          // Get highest bid to see if this bid was the winner
-          let isWinningBid = false;
-          try {
-            const highestBid = await biddingService.getHighestBid(auction.id);
-            isWinningBid = highestBid && highestBid.id === bid.id && isWinner;
-          } catch (err) {
-            console.log("Could not fetch highest bid:", err);
+          // Winner is determined by highest bid, not by transaction existence
+          let highestBid = highestBidCache.get(auction.id);
+          if (!highestBidCache.has(auction.id)) {
+            try {
+              highestBid = await biddingService.getHighestBid(auction.id);
+            } catch (err) {
+              highestBid = null;
+            }
+            highestBidCache.set(auction.id, highestBid);
           }
+
+          const isUserHighestBidder =
+            !!highestBid &&
+            (highestBid.bidderId === userIdOrEmail ||
+              String(highestBid.bidderId) === String(userIdOrEmail));
 
           // Get seller details
           let sellerName = auction.sellerId || "N/A";
@@ -192,9 +201,12 @@ function Orders() {
             sellerId: auction.sellerId,
             auctionStatus: auction.status,
             auctionEndTime: auction.endTime || auction.endDate,
-            isWinner: isWinningBid,
+            isWinner: isUserHighestBidder,
             transaction: transaction,
-            winningBidAmount: transaction?.sellingPrice || null,
+            winningBidAmount:
+              Number(highestBid?.bidAmount ?? highestBid?.amount) ||
+              transaction?.sellingPrice ||
+              null,
           };
         })
       );
@@ -239,7 +251,7 @@ function Orders() {
     const interval = setInterval(() => {
       fetchTransactions();
       fetchCompletedBids();
-    }, 10000); // Refresh every 10 seconds
+    }, 60000); // Refresh every 1 min
     return () => clearInterval(interval);
   }, [loggedUser, navigate, fetchTransactions, fetchCompletedBids]);
 
@@ -282,7 +294,7 @@ function Orders() {
             <th>Amount</th>
             <th>Payment Status</th>
             <th>Date</th>
-            <th>Actions</th>
+            {/* <th>Actions</th> */}
           </tr>
         </thead>
         <tbody>
@@ -298,12 +310,12 @@ function Orders() {
                   {txn.paymentStatus || "PENDING"}
                 </span>
               </td>
-              <td>
+              {/* <td>
                 {txn.transactionDate
                   ? new Date(txn.transactionDate).toLocaleString()
                   : "N/A"}
-              </td>
-              <td>
+              </td> */}
+             <td>
                 <button
                   className="small-btn"
                   onClick={() => goInvoice(txn)}
@@ -314,7 +326,7 @@ function Orders() {
                 <button className="small-btn" onClick={() => downloadInvoicePDF(txn)}>
                   DOWNLOAD PDF
                 </button>
-              </td>
+              </td> 
             </tr>
           ))}
         </tbody>
@@ -342,7 +354,7 @@ function Orders() {
             <th>Winning Bid</th>
             <th>Status</th>
             <th>Bid Date</th>
-            <th>Actions</th>
+            {/* <th>Actions</th> */}
           </tr>
         </thead>
         <tbody>
@@ -384,7 +396,7 @@ function Orders() {
                 )}
               </td>
               <td>{bid.bidTime ? new Date(bid.bidTime).toLocaleString() : "N/A"}</td>
-              <td>
+              {/* <td>
                 {bid.isWinner && bid.transaction ? (
                   <>
                     <button
@@ -406,7 +418,7 @@ function Orders() {
                     No invoice available
                   </span>
                 )}
-              </td>
+              </td> */}
             </tr>
           ))}
         </tbody>

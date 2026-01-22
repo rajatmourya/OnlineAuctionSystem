@@ -8901,3 +8901,27 @@ java.lang.UnsupportedOperationException: No language server has registered to ha
 
 !ENTRY com.microsoft.copilot.eclipse 1 0 2026-01-22 09:45:50.235
 !MESSAGE [Info] Completion handler is refreshed for the document: file:///D:/Courses/Project/online_auction_system/backend/auction-service/src/main/resources/application.properties
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2026-01-22 11:00:31.738
+!MESSAGE [Info] Document is null for editor: AuctionClosingScheduler.java
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2026-01-22 11:00:31.740
+!MESSAGE [Info] Completion handler is refreshed for the document: file:///D:/Courses/Project/online_auction_system/backend/auction-service/src/main/java/com/oas/auctionservice/scheduler/AuctionClosingScheduler.java
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2026-01-22 11:05:45.660
+!MESSAGE [Info] Document is null for editor: Auction.java
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2026-01-22 11:05:45.661
+!MESSAGE [Info] Completion handler is refreshed for the document: file:///D:/Courses/Project/online_auction_system/backend/auction-service/src/main/java/com/oas/auctionservice/model/Auction.java
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2026-01-22 11:05:45.720
+!MESSAGE [Info] Document is null for editor: Invoice.java
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2026-01-22 11:05:45.720
+!MESSAGE [Info] Completion handler is refreshed for the document: file:///D:/Courses/Project/online_auction_system/backend/transaction-service/src/main/java/com/oas/transactionservice/model/Invoice.java
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2026-01-22 11:05:45.891
+!MESSAGE [Info] Document is null for editor: AuctionController.java
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2026-01-22 11:05:45.892
+!MESSAGE [Info] Completion handler is refreshed for the document: file:///D:/Courses/Project/online_auction_system/backend/auction-service/src/main/java/com/oas/auctionservice/controller/AuctionController.java

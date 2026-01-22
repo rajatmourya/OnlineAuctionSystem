@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import "./MyBidding.css";
 import biddingService from "../../services/biddingService";
 import auctionService from "../../services/auctionService";
-import transactionService from "../../services/transactionService";
 
 function MyBidding() {
   const [myBids, setMyBids] = useState([]);
@@ -36,15 +35,7 @@ function MyBidding() {
       const allAuctions = await auctionService.getAllAuctions();
       const now = new Date();
 
-      let userTransactions = [];
-      try {
-        const buyerIdentifier = getUserIdentifier();
-        if (buyerIdentifier) {
-          userTransactions = await transactionService.getTransactionsByBuyer(buyerIdentifier);
-        }
-      } catch (err) {
-        console.log("Could not fetch transactions:", err);
-      }
+      const userIdOrEmail = getUserIdentifier() || loggedUser.email;
 
       // Get bids for each auction and filter by current user
       const userBidsData = [];
@@ -52,6 +43,29 @@ function MyBidding() {
       for (const auction of allAuctions) {
         try {
           const bids = await biddingService.getBidsForAuction(auction.id);
+
+          // Highest bid (winner) is determined only from bids
+          const highestBid = (bids || []).reduce((best, current) => {
+            if (!current) return best;
+            if (!best) return current;
+
+            const bestAmount = Number(best.bidAmount ?? best.amount ?? 0);
+            const currentAmount = Number(current.bidAmount ?? current.amount ?? 0);
+
+            if (currentAmount > bestAmount) return current;
+            if (currentAmount < bestAmount) return best;
+
+            // Tie-breaker: newest bid wins
+            const bestTime = best.bidTime ? new Date(best.bidTime).getTime() : 0;
+            const currentTime = current.bidTime ? new Date(current.bidTime).getTime() : 0;
+            return currentTime >= bestTime ? current : best;
+          }, null);
+
+          const isUserHighestBidder =
+            !!highestBid &&
+            (highestBid.bidderId === userIdOrEmail ||
+              String(highestBid.bidderId) === String(userIdOrEmail));
+
           const userBids = bids.filter(
             (bid) => bid.bidderId === loggedUser.id || bid.bidderId === loggedUser.email
           );
@@ -64,18 +78,10 @@ function MyBidding() {
               status = "CLOSED";
             }
 
-            // Check if this user won by checking transactions (same logic as Orders.js)
-            const userIdOrEmail = getUserIdentifier() || loggedUser.email;
-            const transaction = userTransactions.find((t) => t.auctionId === auction.id);
-            const isWinner =
-              transaction &&
-              (transaction.buyerId === userIdOrEmail ||
-                String(transaction.buyerId) === String(userIdOrEmail));
-
             // Determine result
             let result = "Applied";
             if (status === "CLOSED" || status === "Ended") {
-              result = isWinner ? "Won" : "Lost";
+              result = isUserHighestBidder ? "Won" : "Lost";
             }
 
             // Add each bid
@@ -129,7 +135,7 @@ function MyBidding() {
     fetchMyBids({ showFullLoading: true });
 
     // Background refresh (no full-screen loading)
-    const interval = setInterval(() => fetchMyBids({ showFullLoading: false }), 5000);
+    const interval = setInterval(() => fetchMyBids({ showFullLoading: false }), 30000);
     return () => clearInterval(interval);
   }, [loggedUser, fetchMyBids]);
 
@@ -187,7 +193,8 @@ function MyBidding() {
                       ? new Date(bid.endDate).toLocaleString()
                       : "N/A"}
                   </td>
-                  <td>{bid.country}</td>
+                  {/* <td>{bid.country}</td> */}
+                  <td>India</td>
 
                   <td>
                     <span className={`status ${bid.status.toLowerCase()}`}>

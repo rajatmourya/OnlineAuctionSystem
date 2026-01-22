@@ -49,7 +49,7 @@ function Navbar() {
         {role === "seller" && (
           <>
             <button onClick={() => navigate("/post-auction")}>POST AUCTION</button>
-            <button onClick={() => navigate("/auction-status")}>MY AUCTIONS</button>
+            {/* <button onClick={() => navigate("/auction-status")}>MY AUCTIONS</button> */}
             <button onClick={() => navigate("/profile")}>PROFILE</button>
             <button className="logout-btn" onClick={logout}>
               LOGOUT
@@ -67,9 +67,9 @@ function Navbar() {
             <button onClick={() => navigate("/post-auction")}>
               POST AUCTION
             </button>
-            <button onClick={() => navigate("/auction-status")}>
+            {/* <button onClick={() => navigate("/auction-status")}>
               AUCTION STATUS
-            </button>
+            </button> */}
             <button onClick={() => navigate("/bidding-details")}>
               BIDDING DETAILS
             </button>
