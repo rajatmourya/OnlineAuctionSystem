@@ -28,7 +28,7 @@ function Register() {
     setError("");
 
     try {
-      const response = await userService.register({
+      await userService.register({
         name: form.name,
         email: form.email,
         mobile: form.mobile,

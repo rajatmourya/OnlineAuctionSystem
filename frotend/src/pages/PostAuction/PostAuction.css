@@ -1,0 +1,23 @@
+@import "../UserLogin/UserLogin.css";
+
+/* POST AUCTION ONLY */
+
+.file-box {
+  margin-bottom: 20px;
+}
+
+.file-box label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #333;
+}
+
+.file-box input[type="file"] {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  background: white;
+  border-radius: 4px;
+  cursor: pointer;
+}

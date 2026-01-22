@@ -11,4 +11,6 @@ public interface BidRepository extends MongoRepository<Bid, String> {
     List<Bid> findByAuctionIdOrderByBidAmountDesc(String auctionId);
 
     Optional<Bid> findTopByAuctionIdOrderByBidAmountDesc(String auctionId);
+    
+    List<Bid> findByBidderIdOrderByBidTimeDesc(String bidderId);
 }

@@ -10,33 +10,39 @@ spring:
       routes:
         # -------- USER AUTH APIs --------
         - id: user-service-auth
-          uri: lb://USER-SERVICE
+          uri: lb://user-service
           predicates:
             - Path=/api/user/auth/**
 
         # -------- USER CRUD APIs --------
         - id: user-service-users
-          uri: lb://USER-SERVICE
+          uri: lb://user-service
           predicates:
             - Path=/api/users/**
 
         # -------- AUCTION SERVICE --------
         - id: auction-service
-          uri: lb://AUCTION-SERVICE
+          uri: lb://auction-service
           predicates:
             - Path=/api/auctions/**
 
         # -------- BIDDING SERVICE --------
         - id: bidding-service
-          uri: lb://BIDDING-SERVICE
+          uri: lb://bidding-service
           predicates:
             - Path=/api/bids/**
 
         # -------- TRANSACTION SERVICE --------
         - id: transaction-service
-          uri: lb://TRANSACTION-SERVICE
+          uri: lb://transaction-service
           predicates:
             - Path=/api/transactions/**
+
+        # -------- INVOICE SERVICE --------
+        - id: invoice-service
+          uri: lb://transaction-service
+          predicates:
+            - Path=/api/invoices/**
 
       discovery:
         locator:

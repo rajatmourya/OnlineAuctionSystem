@@ -18,7 +18,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtAuthenticationFilter jwtAuthenticationFilter) throws Exception {
 
         http
             .csrf(csrf -> csrf.disable())
@@ -27,13 +27,11 @@ public class SecurityConfig {
             )
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/user/auth/**").permitAll()
-                .requestMatchers("/api/users/**").permitAll()  //
-
-                
+                .requestMatchers("/api/users/**").permitAll()
                 .anyRequest().authenticated()
             )
             .addFilterBefore(
-                jwtAuthenticationFilter(null),
+                jwtAuthenticationFilter,
                 UsernamePasswordAuthenticationFilter.class
             );
 

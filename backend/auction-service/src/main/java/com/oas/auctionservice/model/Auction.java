@@ -23,6 +23,7 @@ public class Auction {
     private double reservePrice;
     private Double buyNowPrice;
 
+    // Jackson will automatically parse ISO-8601 strings to Instant
     private Instant startTime;
     private Instant endTime;
 

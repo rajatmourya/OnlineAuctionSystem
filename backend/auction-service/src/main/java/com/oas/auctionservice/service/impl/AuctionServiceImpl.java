@@ -19,9 +19,55 @@ public class AuctionServiceImpl implements AuctionService {
 
     @Override
     public Auction createAuction(Auction auction) {
-        auction.setStatus("ACTIVE"); // Ensure consistent starting state
-        auction.setCreatedAt(Instant.now());
-        return auctionRepository.save(auction);
+        try {
+            // Validate required fields
+            if (auction.getTitle() == null || auction.getTitle().trim().isEmpty()) {
+                throw new RuntimeException("Auction title is required");
+            }
+            if (auction.getSellerId() == null || auction.getSellerId().trim().isEmpty()) {
+                throw new RuntimeException("Seller ID is required");
+            }
+            if (auction.getCategory() == null || auction.getCategory().trim().isEmpty()) {
+                throw new RuntimeException("Category is required");
+            }
+            if (auction.getStartingPrice() <= 0) {
+                throw new RuntimeException("Starting price must be greater than 0");
+            }
+            if (auction.getEndTime() == null) {
+                throw new RuntimeException("End time is required");
+            }
+            if (auction.getEndTime().isBefore(Instant.now())) {
+                throw new RuntimeException("End time must be in the future");
+            }
+            
+            // Set default values if not provided
+            if (auction.getStartTime() == null) {
+                auction.setStartTime(Instant.now());
+            }
+            if (auction.getStatus() == null || auction.getStatus().trim().isEmpty()) {
+                auction.setStatus("ACTIVE");
+            }
+            if (auction.getCondition() == null || auction.getCondition().trim().isEmpty()) {
+                auction.setCondition("NEW");
+            }
+            if (auction.getQuantity() <= 0) {
+                auction.setQuantity(1);
+            }
+            if (auction.getReservePrice() <= 0) {
+                auction.setReservePrice(auction.getStartingPrice());
+            }
+            
+            auction.setCreatedAt(Instant.now());
+            
+            System.out.println("Saving auction to database...");
+            Auction saved = auctionRepository.save(auction);
+            System.out.println("Auction saved successfully with ID: " + saved.getId());
+            return saved;
+        } catch (Exception e) {
+            System.err.println("Error in createAuction service: " + e.getMessage());
+            e.printStackTrace();
+            throw new RuntimeException("Failed to create auction: " + e.getMessage(), e);
+        }
     }
 
     @Override

@@ -18,7 +18,8 @@ public class ApiGatewayApplication {
     public CorsWebFilter corsWebFilter() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.addAllowedOrigin("http://localhost:3000"); // React
+        config.addAllowedOrigin("http://localhost:3000"); 
+        config.addAllowedOrigin("http://localhost:3001"); 
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
 

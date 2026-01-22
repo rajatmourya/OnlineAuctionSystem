@@ -122,6 +122,7 @@ public class UserServiceImpl implements UserService {
 
         User existingUser = getUserById(userId);
 
+        // Email update with uniqueness check
         if (updatedUser.getEmail() != null && !updatedUser.getEmail().isBlank()) {
             String email = updatedUser.getEmail().trim().toLowerCase();
 
@@ -135,18 +136,22 @@ public class UserServiceImpl implements UserService {
             existingUser.setEmail(email);
         }
 
+        // Name update
         if (updatedUser.getName() != null) {
             existingUser.setName(updatedUser.getName());
         }
 
+        // Mobile number update
         if (updatedUser.getMobileNumber() != null) {
             existingUser.setMobileNumber(updatedUser.getMobileNumber());
         }
 
+        // Address update
         if (updatedUser.getAddress() != null) {
             existingUser.setAddress(updatedUser.getAddress());
         }
 
+        // Profile photo URL update
         if (updatedUser.getProfilePhotoUrl() != null) {
             existingUser.setProfilePhotoUrl(updatedUser.getProfilePhotoUrl());
         }
@@ -155,6 +160,14 @@ public class UserServiceImpl implements UserService {
         if (updatedUser.getRole() != null && !updatedUser.getRole().isBlank()) {
             existingUser.setRole(updatedUser.getRole());
         }
+
+        // Password update (if provided, encode it)
+        if (updatedUser.getPassword() != null && !updatedUser.getPassword().isBlank()) {
+            existingUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
+        }
+
+        // Note: id, createdAt, and active are not updated through this method
+        // Add handling for any additional fields you've added to User model here
 
         return userRepository.save(existingUser);
     }

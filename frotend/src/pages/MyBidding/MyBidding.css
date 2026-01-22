@@ -1,0 +1,80 @@
+/* TABLE FIX */
+.auction-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #f2f2f2;
+}
+
+.auction-table th {
+  background: #ffa640;
+  padding: 10px;
+  color: black;
+  text-align: left;
+}
+
+.auction-table td {
+  padding: 10px;
+  border-top: 1px solid #ddd;
+  background: #fff;
+}
+
+/* STATUS BADGES (OLD STYLE) */
+.status {
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: bold;
+  display: inline-block;
+}
+
+/* ONGOING = GREEN */
+.status.ongoing {
+  background: green;
+  color: white;
+}
+
+/* ENDED / CLOSED = GRAY (OLD LOOK) */
+.status.closed,
+.status.ended {
+  background: #555;
+  color: white;
+}
+
+/* RESULT COLORS (OLD STYLE) */
+.won {
+  color: green;
+  font-weight: bold;
+}
+
+.lost {
+  color: red;
+  font-weight: bold;
+}
+
+.applied {
+  color: blue;
+  font-weight: bold;
+}
+
+.inline-loading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0;
+  opacity: 0.9;
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(0, 0, 0, 0.2);
+  border-top-color: rgba(0, 0, 0, 0.65);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

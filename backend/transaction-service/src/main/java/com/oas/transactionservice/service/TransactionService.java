@@ -13,6 +13,8 @@ public interface TransactionService {
     List<Transaction> getTransactionsByBuyer(String buyerId);
 
     List<Transaction> getTransactionsBySeller(String sellerId);
+    
+    List<Transaction> getAllTransactions();
 
     Transaction updatePaymentStatus(String id, String status);
 }

@@ -33,8 +33,14 @@ public class AuthController {
 
         Map<String, Object> response = new HashMap<>();
         response.put("id", savedUser.getId());
+        response.put("name", savedUser.getName());
         response.put("email", savedUser.getEmail());
+        response.put("mobileNumber", savedUser.getMobileNumber());
+        response.put("address", savedUser.getAddress());
+        response.put("profilePhotoUrl", savedUser.getProfilePhotoUrl());
         response.put("role", savedUser.getRole());
+        response.put("active", savedUser.isActive());
+        response.put("createdAt", savedUser.getCreatedAt());
         response.put("message", "User registered successfully");
 
         return ResponseEntity
@@ -58,9 +64,15 @@ public class AuthController {
 
                     Map<String, Object> response = new HashMap<>();
                     response.put("token", token);
-                    response.put("role", user.getRole());
-                    response.put("email", user.getEmail());
                     response.put("id", user.getId());
+                    response.put("name", user.getName());
+                    response.put("email", user.getEmail());
+                    response.put("mobileNumber", user.getMobileNumber());
+                    response.put("address", user.getAddress());
+                    response.put("profilePhotoUrl", user.getProfilePhotoUrl());
+                    response.put("role", user.getRole());
+                    response.put("active", user.isActive());
+                    response.put("createdAt", user.getCreatedAt());
 
                     return ResponseEntity.ok(response);
                 })

@@ -1,0 +1,4 @@
+spring.application.name=auction-service
+spring.data.mongodb.uri=mongodb+srv://rm24042000:Rajat2146%40@personal.pyzscf3.mongodb.net/oas_auctiondb?retryWrites=true&w=majority
+spring.data.mongodb.auto-index-creation=true
+server.port=8082

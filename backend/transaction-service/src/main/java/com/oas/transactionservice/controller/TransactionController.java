@@ -37,6 +37,11 @@ public class TransactionController {
         return service.getTransactionsBySeller(sellerId);
     }
 
+    @GetMapping("/all")
+    public List<Transaction> getAllTransactions() {
+        return service.getAllTransactions();
+    }
+
     @PutMapping("/{id}/status")
     public Transaction updateStatus(@PathVariable String id,
                                     @RequestParam String status) {

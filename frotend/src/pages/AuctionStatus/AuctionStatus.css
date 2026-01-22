@@ -1,0 +1,34 @@
+.status {
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-weight: bold;
+  font-size: 13px;
+}
+
+.status.ongoing {
+  background: green;
+  color: white;
+}
+
+.status.ended {
+  background: red;
+  color: white;
+}
+
+.status.closed {
+  background: #555;
+  color: white;
+}
+
+.close-btn {
+  background: #e74c3c;
+  color: white;
+  padding: 6px 10px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.close-btn:hover {
+  background: #c0392b;
+}

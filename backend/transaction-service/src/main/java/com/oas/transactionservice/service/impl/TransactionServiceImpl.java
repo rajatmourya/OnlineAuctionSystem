@@ -42,6 +42,11 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
+    public List<Transaction> getAllTransactions() {
+        return repository.findAll();
+    }
+
+    @Override
     public Transaction updatePaymentStatus(String id, String status) {
         Transaction txn = getTransactionById(id);
         txn.setPaymentStatus(status);

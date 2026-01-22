@@ -1,0 +1,105 @@
+.invoice-wrap {
+  width: min(980px, 96vw);
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 16px;
+  padding: 16px;
+}
+
+.invoice-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.invoice-title {
+  margin: 0 0 6px;
+}
+
+.muted {
+  opacity: 0.85;
+  font-size: 13px;
+}
+
+.invoice-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin: 14px 0;
+}
+
+@media (min-width: 800px) {
+  .invoice-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.box {
+  background: rgba(0, 0, 0, 0.22);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 14px;
+  padding: 12px;
+}
+
+.box-title {
+  font-weight: 800;
+  margin-bottom: 6px;
+}
+
+.invoice-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: rgba(0, 0, 0, 0.18);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.invoice-table th,
+.invoice-table td {
+  padding: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  text-align: left;
+}
+
+.right {
+  text-align: right;
+}
+
+.totals {
+  margin-top: 14px;
+  max-width: 360px;
+  margin-left: auto;
+  background: rgba(0, 0, 0, 0.22);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 14px;
+  padding: 12px;
+}
+
+.totals .row {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+}
+
+.totals .total {
+  font-weight: 900;
+  font-size: 18px;
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  .app-background,
+  body {
+    background: #fff !important;
+    color: #000 !important;
+  }
+  .invoice-wrap {
+    border: 1px solid #ddd !important;
+    background: #fff !important;
+  }
+}
+

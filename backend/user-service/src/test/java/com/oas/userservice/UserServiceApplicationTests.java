@@ -43,7 +43,7 @@ class UserServiceApplicationTests {
         user.setEmail("rajat@test.com");
         user.setPassword("123456");
 
-        mockMvc.perform(post("/api/auth/register")
+        mockMvc.perform(post("/api/user/auth/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(user)))
                 .andExpect(status().isCreated());
@@ -57,7 +57,7 @@ class UserServiceApplicationTests {
         user.setEmail("rajat@test.com");
         user.setPassword("123456");
 
-        mockMvc.perform(post("/api/auth/register")
+        mockMvc.perform(post("/api/user/auth/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(user)))
                 .andExpect(status().isCreated());
@@ -66,7 +66,7 @@ class UserServiceApplicationTests {
         request.setEmail("rajat@test.com");
         request.setPassword("123456");
 
-        mockMvc.perform(post("/api/auth/login")
+        mockMvc.perform(post("/api/user/auth/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())

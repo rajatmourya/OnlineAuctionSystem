@@ -32,16 +32,17 @@ public class SecurityConfig {
                 // Allow actuator/health checks without a token
                 .requestMatchers(new AntPathRequestMatcher("/actuator/**")).permitAll()
 
-                // GET (Viewing): Allow for any logged-in user (BUYER or SELLER)
-                .requestMatchers(HttpMethod.GET, "/api/auctions/**").authenticated()
-//       .requestMatchers(HttpMethod.GET, "/api/auctions/**").permitAll() 
+                // POST/PUT/CLOSE (Modifying): Restricted to SELLER or ADMIN roles
+                // Check these FIRST before GET to ensure proper role checking
+                .requestMatchers(HttpMethod.POST, "/api/auctions", "/api/auctions/**").hasAnyRole("SELLER", "ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/api/auctions", "/api/auctions/**").hasAnyRole("SELLER", "ADMIN")
+                .requestMatchers(HttpMethod.POST, "/api/auctions/**/close").hasAnyRole("SELLER", "ADMIN")
 
-                // POST/PUT/CLOSE (Modifying): Strictly restricted to users with ROLE_SELLER
-                // We use "/**" to ensure /api/auctions/ (with slash) is also covered
-                .requestMatchers(HttpMethod.POST, "/api/auctions/**").hasRole("SELLER")
-                .requestMatchers(HttpMethod.PUT, "/api/auctions/**").hasRole("SELLER")
+                // GET (Viewing): Allow for any logged-in user (BUYER, SELLER, or ADMIN)
+                // Match both /api/auctions and /api/auctions/**
+                .requestMatchers(HttpMethod.GET, "/api/auctions", "/api/auctions/**").authenticated()
 
-                // Ensure all other requests (like /api/auctions/{id}/close) are also secured
+                // Ensure all other requests are secured
                 .anyRequest().authenticated()
             )
 
@@ -50,7 +51,7 @@ public class SecurityConfig {
                 .accessDeniedHandler((request, response, accessDeniedException) -> {
                     System.err.println("FORBIDDEN ERROR: User lacks required role. Path: " + request.getRequestURI());
                     response.setStatus(403);
-                    response.getWriter().write("Access Denied: You do not have the SELLER role.");
+                    response.getWriter().write("Access Denied: You do not have the required role (SELLER or ADMIN).");
                 })
             )
 

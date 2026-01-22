@@ -42,4 +42,17 @@ public class BiddingServiceImpl implements BiddingService {
     public List<Bid> getAllBidsForAuction(String auctionId) {
         return bidRepository.findByAuctionIdOrderByBidAmountDesc(auctionId);
     }
+
+    @Override
+    public List<Bid> getTopBids(String auctionId, int limit) {
+        List<Bid> allBids = bidRepository.findByAuctionIdOrderByBidAmountDesc(auctionId);
+        return allBids.stream()
+                .limit(limit)
+                .collect(java.util.stream.Collectors.toList());
+    }
+
+    @Override
+    public List<Bid> getBidsByBidder(String bidderId) {
+        return bidRepository.findByBidderIdOrderByBidTimeDesc(bidderId);
+    }
 }

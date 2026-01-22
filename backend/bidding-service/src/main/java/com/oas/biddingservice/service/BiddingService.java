@@ -11,4 +11,8 @@ public interface BiddingService {
     Bid getHighestBid(String auctionId);
 
     List<Bid> getAllBidsForAuction(String auctionId);
+    
+    List<Bid> getTopBids(String auctionId, int limit);
+    
+    List<Bid> getBidsByBidder(String bidderId);
 }

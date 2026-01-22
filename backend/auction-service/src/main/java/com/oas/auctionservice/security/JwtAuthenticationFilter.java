@@ -58,14 +58,20 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 roles.addAll(((Collection<?>) roleObject).stream().map(Object::toString).collect(Collectors.toList()));
             }
 
-            if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                
+            if (email != null) {
+                // Always set authentication to ensure it's fresh for each request
                 List<SimpleGrantedAuthority> authorities = roles.stream()
-                        .map(r -> r.startsWith("ROLE_") ? r : "ROLE_" + r)
+                        .map(r -> {
+                            // Normalize role: convert to uppercase and ensure ROLE_ prefix
+                            String normalized = r.toUpperCase().trim();
+                            return normalized.startsWith("ROLE_") ? normalized : "ROLE_" + normalized;
+                        })
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toList());
 
                 System.out.println("DEBUG - Final Authorities: " + authorities);
+                System.out.println("DEBUG - Request Method: " + request.getMethod());
+                System.out.println("DEBUG - Request Path: " + request.getRequestURI());
 
                 UsernamePasswordAuthenticationToken authentication =
                         new UsernamePasswordAuthenticationToken(email, null, authorities);

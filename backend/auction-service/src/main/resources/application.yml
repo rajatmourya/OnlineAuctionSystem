@@ -7,7 +7,7 @@ spring:
 
   data:
     mongodb:
-      uri: mongodb://localhost:27017/auctiondb
+      uri: mongodb+srv://rm24042000:Rajat2146%40@personal.pyzscf3.mongodb.net/oas_auctiondb?retryWrites=true&w=majority
 
 eureka:
   client:

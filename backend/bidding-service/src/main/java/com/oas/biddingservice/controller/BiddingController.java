@@ -31,4 +31,14 @@ public class BiddingController {
     public Bid getHighestBid(@PathVariable String auctionId) {
         return biddingService.getHighestBid(auctionId);
     }
+
+    @GetMapping("/auction/{auctionId}/top/{limit}")
+    public List<Bid> getTopBids(@PathVariable String auctionId, @PathVariable int limit) {
+        return biddingService.getTopBids(auctionId, limit);
+    }
+
+    @GetMapping("/bidder/{bidderId}")
+    public List<Bid> getBidsByBidder(@PathVariable String bidderId) {
+        return biddingService.getBidsByBidder(bidderId);
+    }
 }

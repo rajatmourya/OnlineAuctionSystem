@@ -71,6 +71,24 @@ export const userService = {
       throw error.response?.data || error.message;
     }
   },
+
+  // Admin: Create user with specific role (for seller registration)
+  createUserWithRole: async (userData) => {
+    try {
+      const response = await axiosInstance.post('/users/admin/create', {
+        name: userData.name,
+        email: userData.email,
+        mobileNumber: userData.mobileNumber || userData.mobile,
+        address: userData.address,
+        password: userData.password,
+        role: userData.role || 'SELLER',
+        profilePhotoUrl: userData.profilePhotoUrl || '',
+      });
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || error.message;
+    }
+  },
 };
 
 export default userService;
